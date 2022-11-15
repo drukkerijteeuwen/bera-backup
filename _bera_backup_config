@@ -1,0 +1,57 @@
+# Where to save this backup
+backupDir=/home/server/backups/
+
+##############################
+### FILES CONFIG
+##############################
+# List of files/folders to backup
+backupList=(
+	"/bin/"
+	"/boot/"
+	"/dev/"
+	"/etc/"
+	"/usr/"
+	"/root/"
+	"/home/"
+	"/sbin/"
+	"/snap/"
+	"/srv/"
+	"/var/"
+)
+
+# Files to exclude from backup
+BackupListExcluded=(
+	".s*"
+	".*"
+	"nbproject"
+	"*.log"
+	"logs/*"
+)
+
+##############################
+### SERVICES CONFIG
+##############################
+# Backup iptables
+backupIptables=1
+
+# Backup crontabs of users
+backupCrontabs=1
+
+# Save a list of existing users or not
+checkUsers=1
+
+# Save a list of enabled services
+checkEnabledServices=1
+
+# Save a list of installed packages
+checkInstalledPackages=1
+
+# Save a list of Pear packages
+checkPear=0
+
+##############################
+### EXTRA CONFIG
+##############################
+# Mantain file permissions / ownerships
+# Active only if you know only root will download the backup, otherwise users could find permissions errors while downloading the backup
+maintainFilePermissions=0
