@@ -185,15 +185,18 @@ if [ "$backupCrontabs" = "1" ]; then
 fi
 
 # PEAR modules
-if type "pear" > /dev/null; then
-	echo "$txtCreatingBackup PEAR modules list..."
-	pear list |  tail -n +4 | awk '{print $1}' > ${backupDirConfig}/pearModules
+if [ "$checkPear" = "1" ]; then
+  if type "pear" > /dev/null; then
+    echo "$txtCreatingBackup PEAR modules list..."
+    pear list |  tail -n +4 | awk '{print $1}' > ${backupDirConfig}/pearModules
+  fi
 fi
 
 # List of services enabled on startup
 if [ "$checkEnabledServices" = "1" ]; then
 	echo "$txtChecking enabled services..."
-	chkconfig --list | grep -i "2:activ" | awk '{print $1}' | sort > ${backupDirConfig}/$servicesFile
+	#chkconfig --list | grep -i "2:activ" | awk '{print $1}' | sort > ${backupDirConfig}/$servicesFile
+	systemctl list-units --all --type=service --no-pager | grep running | awk '{print $1}' | sort > ${backupDirConfig}/$servicesFile
 fi
 
 # List of installed packages
@@ -211,6 +214,11 @@ if [ "$checkInstalledPackages" = "1" ]; then
 			echo "$concretePackage	$provider" >> ${backupDirConfig}/$installedPackagesFile
 		done < /tmp/$installedPackagesFile.tmp
 		rm -f /tmp/$installedPackagesFile.tmp
+	fi
+	
+	if type "dpkg-query" > /dev/null; then
+		echo "$txtChecking installed packages..."
+		dpkg-query --showformat='${Package}: ${Version}\n' -W > $backupdir/$installedPackagesFile
 	fi
 fi
 
